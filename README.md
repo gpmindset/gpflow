@@ -44,6 +44,6 @@ It serves as a **foundation** for future AI-integrated automation platforms.
 
 ---
 
-> Built with ❤️ by [SG Prakash](https://github.com/gpmindset)  
+> Built with ❤️ by [SG Prakash](https://github.com/sgprakas)  
 > Part of the **GPmindset** ecosystem
 

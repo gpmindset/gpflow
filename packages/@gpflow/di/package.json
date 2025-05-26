@@ -1,0 +1,20 @@
+{
+	"name": "@gpflow/di",
+	"scripts": {
+		"dev": "tsc --watch",
+		"build": "tsc"
+	},
+	"main": "dist/di.js",
+	"module": "src/di.ts",
+	"types": "dist/di.d.ts",
+	"files": [
+		"dist/**/*"
+	],
+	"devDependencies": {
+		"@gpflow/typescript-config": "workspace:*"
+	},
+	"dependencies": {
+		"reflect-metadata": "^0.2.2",
+		"tsyringe": "^4.10.0"
+	}
+}

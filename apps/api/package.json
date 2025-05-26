@@ -1,0 +1,21 @@
+{
+  "name": "@gpflow/api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "@gpflow/di": "workspace:*",
+    "@gpflow/decorators": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "@gpflow/typescript-config": "workspace:*"
+  }
+}

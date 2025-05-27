@@ -3,19 +3,36 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "concurrently -k -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch\" \"nodemon\"",
+    "watch": "tsc-watch -p tsconfig.build.json --onCompilationComplete \"tsc-alias -p tsconfig.build.json\"",
     "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0",
+    "@gpflow/decorators": "workspace:*",
     "@gpflow/di": "workspace:*",
-    "@gpflow/decorators": "workspace:*"
+    "compression": "^1.8.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "pino-http": "^10.4.0",
+    "zod": "^3.25.28",
+    "zod-class": "^0.0.18"
   },
   "devDependencies": {
+    "@gpflow/typescript-config": "workspace:*",
+    "@types/compression": "^1.8.0",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
-    "@gpflow/typescript-config": "workspace:*"
+    "@types/node": "^22.15.3",
+    "concurrently": "^9.1.2",
+    "pino-pretty": "^13.0.0",
+    "tsc-alias": "^1.8.16",
+    "tsc-watch": "^7.0.0"
   }
 }

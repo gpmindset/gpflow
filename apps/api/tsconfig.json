@@ -1,9 +1,14 @@
 {
-  "extends": "@gpflow/typescript-config/base.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src"
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+	"extends": "@gpflow/typescript-config/base.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"baseUrl": "src",
+		"paths": {
+			"@/*": ["./*"]
+		},
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
+	},
+	"include": ["src", "tsconfig.build.json"],
+	"exclude": ["node_modules", "dist"]
 }

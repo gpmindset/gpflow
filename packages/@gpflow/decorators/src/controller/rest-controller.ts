@@ -8,7 +8,7 @@ export const RestController =
 		const metadata = Container.resolve(
 			ControllerRegistryMetaData
 		).getControllerMetaData(target as unknown as Controller);
-        
+
         metadata.basePath = basePath
 
         return Service()(target as unknown as Controller)

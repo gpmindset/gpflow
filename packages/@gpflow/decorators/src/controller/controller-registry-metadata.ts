@@ -26,6 +26,7 @@ export class ControllerRegistryMetaData {
         let route = metadata.routes.get(handlerName)
         if(!route) {
             route = {} as RouteMetaData
+			route.args = [];
             metadata.routes.set(handlerName, route)
         }
         return route

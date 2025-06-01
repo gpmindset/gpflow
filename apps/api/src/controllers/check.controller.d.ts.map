@@ -1,0 +1,1 @@
+{"version":3,"file":"check.controller.d.ts","sourceRoot":"","sources":["check.controller.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,MAAM,0BAA0B,CAAC;AACxD,OAAO,KAAK,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAEjD,qBACa,eAAe;IAEpB,OAAO,CAAC,YAAY;gBAAZ,YAAY,EAAE,YAAY;IAIhC,WAAW,CAAC,IAAI,EAAE,OAAO,EAAE,IAAI,EAAE,QAAQ,EAAkB,KAAK,EAAE,MAAM;;;CAIjF"}

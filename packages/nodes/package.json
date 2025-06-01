@@ -1,0 +1,27 @@
+{
+  "name": "@gpflow/nodes",
+  "version": "0.1.0",
+  "description": "Node implementations for GPFlow",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "dev": "tsc-watch -p tsconfig.build.json --onCompilationComplete \"tsc-alias -p tsconfig.build.json\""
+  },
+  "main": "dist/index.js",
+	"module": "src/index.ts",
+	"types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@gpflow/typescript-config": "workspace:*",
+    "tsc-alias": "^1.8.8"
+  },
+  "dependencies": {
+    "@gpflow/di": "workspace:*",
+    "@gpflow/core": "workspace:*",
+    "@aws-sdk/client-ec2": "^3.0.0"
+  }
+}

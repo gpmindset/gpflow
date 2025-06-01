@@ -1,15 +1,20 @@
 {
-	"compilerOptions": {
-		"types": ["node"],
-		"noUnusedLocals": false,
-		"noUnusedParameters": false,
-		"declaration": true
-	},
-	"tsc-alias": {
-		"replacers": {
-			"base-url": {
-				"enabled": false
-			}
-		}
-	}
+  "extends": "./base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@gpflow/*": ["../*/dist"]
+    }
+  },
+  "tsc-alias": {
+    "replacers": {
+      "base-url": {
+        "enabled": true
+      }
+    }
+  }
 }

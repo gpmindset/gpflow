@@ -4,28 +4,57 @@ import { NodeDefinition, NodeParameters, NodeValidationResult } from '@/types/no
 export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParameters> implements INodeExecutor {
   abstract readonly type: string;
 
-  abstract validateParameters(parameters: T): NodeValidationResult;
+  validateParameters(parameters: T): NodeValidationResult {
+    return { isValid: true };
+  }
 
-  protected abstract getRequiredParameters(): string[];
+  validate(parameters: T): NodeValidationResult {
+    const validation = this.validateRequiredParameters(parameters);
+    if (!validation.isValid) {
+      return validation;
+    }
 
-  abstract execute(
+    return this.validateParameters(parameters);
+  }
+
+  protected getRequiredParameters(): string[] {
+    return [];
+  }
+
+  getNext(
+    node: NodeDefinition<T>,
+    result: any,
+  ): string | undefined {
+    return undefined;
+  }
+
+  abstract run(
     node: NodeDefinition<T>,
     context: IExecutionContext
   ): Promise<any>;
 
-  protected validateRequiredParameters(
+  async execute(
+    node: NodeDefinition<T>,
+    context: IExecutionContext
+  ): Promise<any> {
+    const result = await this.run(node, context);
+    const next = this.getNext(node, result);
+    return { result, next };
+  }
+
+  private validateRequiredParameters(
     parameters: T,
-    required: string[]
   ): NodeValidationResult {
-    const errors: string[] = [];
-    for (const param of required) {
-      if (parameters[param] === undefined || parameters[param] === null) {
-        errors.push(`Missing required parameter: ${param}`);
-      }
+    const requiredParams = this.getRequiredParameters();
+    const missingParams = requiredParams.filter(param => !parameters[param]);
+
+    if (missingParams.length > 0) {
+      return {
+        isValid: false,
+        errors: missingParams.map(param => `Missing required parameter: ${param}`)
+      };
     }
-    return {
-      isValid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined
-    };
+
+    return { isValid: true };
   }
 }

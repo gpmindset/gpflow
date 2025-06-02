@@ -1,5 +1,7 @@
+import { ResolvableValue } from "@/parser/types";
+
 export interface NodeParameters {
-  [key: string]: any;
+  [key: string]: ResolvableValue;
 }
 
 export interface NodeDefinition<T extends NodeParameters = NodeParameters> {

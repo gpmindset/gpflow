@@ -21,6 +21,20 @@ const workflow: WorkflowDefinition = {
           accessKeyId: '@secret:my_key_id',
           secretAccessKey: '@secret:my_secret_key'
         },
+        next: ["edit"]
+      },
+      {
+        id: 'edit',
+        type: 'aws.ec2.editInstance',
+        name: 'Edit Instance',
+        parameters: {
+          instanceId: '{{node.check.output.instanceId}}',
+          instanceType: 't2.micro'
+        },
+        secrets: {
+          accessKeyId: '@secret:my_key_id',
+          secretAccessKey: '@secret:my_secret_key'
+        },
         next: []
       },
     ]

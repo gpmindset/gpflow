@@ -1,7 +1,7 @@
 import { ExecutionEngine, NodeRegistry } from "@gpflow/core";
 import { WorkflowContextManager } from "./context/workflow-context-manager";
 import { WorkflowExecutor } from "./executor/workflow-executor";
-import { EC2CreateInstanceNode } from "@gpflow/nodes";
+import { EC2CreateInstanceNode, EC2EditInstanceNode } from "@gpflow/nodes";
 import { WorkflowDefinition } from "./types";
 
 export class Workflow {
@@ -9,6 +9,7 @@ export class Workflow {
     private registerNodeExecutor() {
         const registry = new NodeRegistry();
         registry.registerNode(new EC2CreateInstanceNode());
+        registry.registerNode(new EC2EditInstanceNode());
         return registry;
     }
 

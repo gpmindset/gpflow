@@ -1,5 +1,7 @@
+import { Parser } from "@/parser/parser";
 import { IExecutionContext, IExecutionEngine, IExecutionResult } from "../interfaces/engine.interface";
 import { NodeRegistry } from "./node-registry";
+import { NodeParameters } from "@/types/nodes";
 
 
 export class ExecutionEngine implements IExecutionEngine {
@@ -58,7 +60,7 @@ export class ExecutionEngine implements IExecutionEngine {
                 };
             }
 
-            const validation = executor.validateParameters(node.parameters);
+            const validation = executor.validate(node.parameters);
             if (!validation.isValid) {
                 return {
                     success: false,
@@ -69,7 +71,10 @@ export class ExecutionEngine implements IExecutionEngine {
             }
 
             try {
-                const { result, next } = await executor.execute(node, context);
+
+                const parser = new Parser(context);
+                const parsedParameters = parser.parse(node.parameters) as NodeParameters;
+                const { result, next } = await executor.execute({ ...node, parameters: parsedParameters }, context);
                 context.nodeResults[node.id] = result;
                 nodeResults[node.id] = result;
                 executedNodes.add(node.id);

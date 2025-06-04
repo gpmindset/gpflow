@@ -6,8 +6,8 @@ const workflow: WorkflowDefinition = {
     name: 'Restart EC2 Instance on Failure',
     description: 'Sample workflow',
     secrets: {
-      aws_key_id: '@secret:my_key_id',
-      aws_secret: '@secret:my_secret_key'
+      accessKeyId: '@secret:accessKeyId',
+      secretAccessKey: '@secret:secretAccessKey'
     },
     nodes: [
       {
@@ -18,8 +18,8 @@ const workflow: WorkflowDefinition = {
           instanceId: 'i-1234567890abcdef0'
         },
         secrets: {
-          accessKeyId: '@secret:my_key_id',
-          secretAccessKey: '@secret:my_secret_key'
+          accessKeyId: '@secret:accessKeyId',
+          secretAccessKey: '@secret:secretAccessKey'
         },
         next: ["edit"]
       },
@@ -32,8 +32,8 @@ const workflow: WorkflowDefinition = {
           instanceType: 't2.micro'
         },
         secrets: {
-          accessKeyId: '@secret:my_key_id',
-          secretAccessKey: '@secret:my_secret_key'
+          accessKeyId: '@secret:accessKeyId',
+          secretAccessKey: '@secret:secretAccessKey'
         },
         next: []
       },
@@ -41,7 +41,12 @@ const workflow: WorkflowDefinition = {
 };
 
 const engine = new Workflow();
-let result = await engine.execute(workflow);
+let result = await engine.execute(workflow, {
+  secrets: {
+    accessKeyId: 'drcsvyghbu',
+    secretAccessKey: 'hbhjdbhbdhudbb'
+  }
+});
 console.log(result);
 
     

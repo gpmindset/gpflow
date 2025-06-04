@@ -1,3 +1,5 @@
+import { IExecutionContext } from "@/interfaces/engine.interface";
+
 export interface HandlebarsContext {
     node: Record<string, { output: any }>;
     secrets: Record<string, string>;
@@ -22,3 +24,10 @@ export type ResolvedValue =
     | ResolvedValue[]
     | { [key: string]: ResolvedValue }
     | undefined;
+
+    
+export type ParserConstructorOptions = {
+    context: IExecutionContext;
+    secretResolver: (key: string) => Promise<string | undefined>;
+};
+    

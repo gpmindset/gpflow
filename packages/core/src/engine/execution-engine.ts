@@ -2,10 +2,11 @@ import { Parser } from "@/parser/parser";
 import { IExecutionContext, IExecutionEngine, IExecutionResult } from "../interfaces/engine.interface";
 import { NodeRegistry } from "./node-registry";
 import { NodeParameters } from "@/types/nodes";
+import { SecretsManager } from "@/secrets/secrets-manager";
 
 
 export class ExecutionEngine implements IExecutionEngine {
-    constructor(private nodeRegistry: NodeRegistry) { }
+    constructor(private nodeRegistry: NodeRegistry, private secretManager: SecretsManager) { }
 
     async execute(context: IExecutionContext): Promise<IExecutionResult> {
         const nodeResults: Record<string, any> = {};
@@ -72,9 +73,11 @@ export class ExecutionEngine implements IExecutionEngine {
 
             try {
 
-                const parser = new Parser(context);
+                const parser = new Parser({ context, secretResolver: async (key) => await this.secretManager.getSecret(context.workflow.id, key) });
                 const parsedParameters = parser.parse(node.parameters) as NodeParameters;
-                const { result, next } = await executor.execute({ ...node, parameters: parsedParameters }, context);
+                const secrets = parser.getSecrets();
+                
+                const { result, next } = await executor.execute({ ...node, parameters: parsedParameters }, { ...context, secrets });
                 context.nodeResults[node.id] = result;
                 nodeResults[node.id] = result;
                 executedNodes.add(node.id);

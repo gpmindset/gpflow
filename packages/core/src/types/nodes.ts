@@ -1,4 +1,4 @@
-import { ResolvableValue } from "@/parser/types";
+import { ResolvableValue } from "@/types/parser";
 
 export interface NodeParameters {
   [key: string]: ResolvableValue;

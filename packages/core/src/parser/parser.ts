@@ -1,13 +1,16 @@
 import { IExecutionContext } from "@/interfaces/engine.interface";
 import Handlebars from "handlebars";
-import { HandlebarsContext, ResolvableValue, ResolvedValue } from "./types";
+import { HandlebarsContext, ResolvableValue, ResolvedValue } from "../types/parser";
+import { ParserConstructorOptions } from "../types/parser";
 
 export class Parser {
     private context: IExecutionContext;
     private handleBarsContext: HandlebarsContext;
+    private secretResolver: (key: string) => Promise<string | undefined>;
 
-    constructor(context: IExecutionContext) {
+    constructor({ context, secretResolver }: ParserConstructorOptions) {
         this.context = context;
+        this.secretResolver = secretResolver;
         this.handleBarsContext = this.buildHandleBarsContext();
     }
 
@@ -22,12 +25,12 @@ export class Parser {
         });
 
         const resolvedSecrets: Record<string, string> = {};
-        Object.entries(secrets).forEach(([key, value]) => {
+        Object.entries(secrets).forEach(async ([key, value]) => {
             if (typeof value === 'string' && value.startsWith('@secret:')) {
                 const refKey = value.slice(8); // remove '@secret:'
-                resolvedSecrets[key] = secrets[refKey] || '';
+                resolvedSecrets[key] = (await this.secretResolver(refKey)) || '';
             } else {
-                resolvedSecrets[key] = value;
+                throw new Error(`Invalid secret reference: ${value}`);
             }
         });
 
@@ -36,6 +39,14 @@ export class Parser {
             secrets: resolvedSecrets,
             variables
         };
+    }
+
+    getSecrets(): Record<string, string> {
+        return this.handleBarsContext.secrets;
+    }
+
+    getVariables(): Record<string, any> {
+        return this.handleBarsContext.variables;
     }
 
     parse(parameters: ResolvableValue): ResolvedValue {

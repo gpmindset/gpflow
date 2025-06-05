@@ -12,6 +12,10 @@ export interface EC2CreateInstanceParameters extends NodeParameters {
 
 export class EC2CreateInstanceNode extends AbstractNodeExecutor<EC2CreateInstanceParameters> {
   readonly type = 'aws.ec2.createInstance';
+  
+  protected getRequiredSecrets(): string[] {
+    return ['accessKeyId', 'secretAccessKey'];
+  }
 
   async run(
     node: NodeDefinition<EC2CreateInstanceParameters>,
@@ -19,6 +23,8 @@ export class EC2CreateInstanceNode extends AbstractNodeExecutor<EC2CreateInstanc
   ): Promise<any> {
     // This would use AWS SDK to create the instance
     // For now, return mock data
+
+    
 
     const instanceId = `i-${Math.random().toString(36).slice(2, 9)}`;
     

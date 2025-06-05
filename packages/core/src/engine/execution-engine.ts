@@ -62,6 +62,7 @@ export class ExecutionEngine implements IExecutionEngine {
             }
 
             const validation = executor.validate(node.parameters);
+            console.log('Validation', validation);
             if (!validation.isValid) {
                 return {
                     success: false,
@@ -75,7 +76,7 @@ export class ExecutionEngine implements IExecutionEngine {
 
                 const parser = new Parser({ context, secretResolver: async (key) => await this.secretManager.getSecret(context.workflow.id, key) });
                 const parsedParameters = parser.parse(node.parameters) as NodeParameters;
-                const secrets = parser.getSecrets();
+                const secrets = await parser.resolveSecrets();
                 
                 const { result, next } = await executor.execute({ ...node, parameters: parsedParameters }, { ...context, secrets });
                 context.nodeResults[node.id] = result;

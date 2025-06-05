@@ -24,25 +24,26 @@ export class Parser {
             node[id] = { output: result };
         });
 
+        return {
+            node,
+            secrets,
+            variables
+        };
+    }
+
+    async resolveSecrets() {
         const resolvedSecrets: Record<string, string> = {};
-        Object.entries(secrets).forEach(async ([key, value]) => {
+        const secrets = this.handleBarsContext.secrets;
+
+        for (const [key, value] of Object.entries(secrets)) {
             if (typeof value === 'string' && value.startsWith('@secret:')) {
                 const refKey = value.slice(8); // remove '@secret:'
                 resolvedSecrets[key] = (await this.secretResolver(refKey)) || '';
             } else {
                 throw new Error(`Invalid secret reference: ${value}`);
             }
-        });
-
-        return {
-            node,
-            secrets: resolvedSecrets,
-            variables
-        };
-    }
-
-    getSecrets(): Record<string, string> {
-        return this.handleBarsContext.secrets;
+        }
+        return resolvedSecrets;
     }
 
     getVariables(): Record<string, any> {

@@ -40,3 +40,8 @@ export interface WorkflowDefinition {
   secrets?: WorkflowSecrets;
   nodes: WorkflowNode[];
 }
+
+export interface RunWorkflowParams {
+    secrets?: Record<string, string>;
+    variables?: Record<string, any>;
+}

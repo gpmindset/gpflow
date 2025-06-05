@@ -1,10 +1,18 @@
-import { ExecutionEngine, NodeRegistry } from "@gpflow/core";
+import { ExecutionEngine, LocalEncryptProvider, NodeRegistry, SecretsManager } from "@gpflow/core";
 import { WorkflowContextManager } from "./context/workflow-context-manager";
 import { WorkflowExecutor } from "./executor/workflow-executor";
 import { EC2CreateInstanceNode, EC2EditInstanceNode } from "@gpflow/nodes";
-import { WorkflowDefinition } from "./types";
+import { RunWorkflowParams, WorkflowDefinition } from "./types";
 
 export class Workflow {
+
+    private secretsManager: SecretsManager;
+    private engine: ExecutionEngine;
+
+    constructor() {
+        this.secretsManager = new SecretsManager(new LocalEncryptProvider('test'));
+        this.engine = new ExecutionEngine(this.registerNodeExecutor(), this.secretsManager);
+    }
 
     private registerNodeExecutor() {
         const registry = new NodeRegistry();
@@ -13,15 +21,16 @@ export class Workflow {
         return registry;
     }
 
-    async execute(workflow: WorkflowDefinition) {
+    async execute(workflow: WorkflowDefinition, params?: RunWorkflowParams) {
 
-        const registry = this.registerNodeExecutor();
-        
         const contextManager = new WorkflowContextManager();
-        const engine = new ExecutionEngine(registry);
-        const executor = new WorkflowExecutor(contextManager, engine);
+        const executor = new WorkflowExecutor(contextManager, this.engine);
+
+        for (const [key, val] of Object.entries(params?.secrets || {})) {
+            await this.secretsManager.setSecret(workflow.id, key, val);
+        }
 
         return await executor.executeWorkflow(workflow);
     }
-    
+
 }

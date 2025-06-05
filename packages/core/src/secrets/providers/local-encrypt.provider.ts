@@ -9,7 +9,7 @@ const IV_LENGTH = 16;
 const AUTH_TAG_LENGTH = 16;
 const STORAGE_FILE = path.join(os.homedir(), '.gpflow-secrets.json');
 
-export class LocalEncryptedProvider implements ISecretProvider {
+export class LocalEncryptProvider implements ISecretProvider {
   private secrets: Record<string, Record<string, string>> = {};
   private key: Buffer;
 

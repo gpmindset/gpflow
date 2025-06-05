@@ -14,7 +14,16 @@ export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParame
       return validation;
     }
 
+    const secretsValidation = this.validateRequiredSecrets(parameters);
+    if (!secretsValidation.isValid) {
+      return secretsValidation;
+    }
+
     return this.validateParameters(parameters);
+  }
+
+  protected getRequiredSecrets(): string[] {
+    return [];
   }
 
   protected getRequiredParameters(): string[] {
@@ -52,6 +61,22 @@ export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParame
       return {
         isValid: false,
         errors: missingParams.map(param => `Missing required parameter: ${param}`)
+      };
+    }
+
+    return { isValid: true };
+  }
+
+  private validateRequiredSecrets(
+    parameters: T,
+  ): NodeValidationResult {
+    const requiredSecrets = this.getRequiredSecrets();
+    const missingSecrets = requiredSecrets.filter(secret => !parameters[secret]);
+
+    if (missingSecrets.length > 0) {
+      return {
+        isValid: false,
+        errors: missingSecrets.map(secret => `Missing required secret: ${secret}`)
       };
     }
 

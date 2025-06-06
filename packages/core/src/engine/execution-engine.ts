@@ -60,8 +60,8 @@ export class ExecutionEngine implements IExecutionEngine {
                     error: new Error(`No executor found for node type: ${node.type}`)
                 };
             }
-
-            const validation = executor.validate(node.parameters);
+            // Validate parameters and secrets
+            const validation = executor.validate(node.parameters, context.secrets);
             console.log('Validation', validation);
             if (!validation.isValid) {
                 return {

@@ -6,8 +6,8 @@ import { RunWorkflowParams, WorkflowDefinition } from "./types";
 
 export class Workflow {
 
-    private secretsManager: SecretsManager;
-    private engine: ExecutionEngine;
+    private readonly secretsManager: SecretsManager;
+    private readonly engine: ExecutionEngine;
 
     constructor() {
         this.secretsManager = new SecretsManager(new LocalEncryptProvider('test'));
@@ -25,6 +25,8 @@ export class Workflow {
 
         const contextManager = new WorkflowContextManager();
         const executor = new WorkflowExecutor(contextManager, this.engine);
+
+
 
         for (const [key, val] of Object.entries(params?.secrets || {})) {
             await this.secretsManager.setSecret(workflow.id, key, val);

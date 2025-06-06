@@ -23,7 +23,7 @@ export class EC2EditInstanceNode extends AbstractNodeExecutor<EC2EditInstancePar
         const instanceId = `i-${Math.random().toString(36).slice(2, 9)}`;
 
         return {
-            instanceId,
+            instanceId: node.parameters.instanceId,
             instanceState: 'pending',
             instanceType: node.parameters.instanceType,
             tags: node.parameters.tags || {}

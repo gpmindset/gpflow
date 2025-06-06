@@ -11,7 +11,7 @@ const STORAGE_FILE = path.join(os.homedir(), '.gpflow-secrets.json');
 
 export class LocalEncryptProvider implements ISecretProvider {
   private secrets: Record<string, Record<string, string>> = {};
-  private key: Buffer;
+  private readonly key: Buffer;
 
   constructor(passphrase: string) {
     this.key = crypto.scryptSync(passphrase, 'gpflow-salt', 32);

@@ -8,13 +8,13 @@ export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParame
     return { isValid: true };
   }
 
-  validate(parameters: T): NodeValidationResult {
+  validate(parameters: T, secrets: Record<string, string>): NodeValidationResult {
     const validation = this.validateRequiredParameters(parameters);
     if (!validation.isValid) {
       return validation;
     }
 
-    const secretsValidation = this.validateRequiredSecrets(parameters);
+    const secretsValidation = this.validateRequiredSecrets(secrets);
     if (!secretsValidation.isValid) {
       return secretsValidation;
     }
@@ -68,10 +68,10 @@ export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParame
   }
 
   private validateRequiredSecrets(
-    parameters: T,
+    secrets: Record<string, string>,
   ): NodeValidationResult {
     const requiredSecrets = this.getRequiredSecrets();
-    const missingSecrets = requiredSecrets.filter(secret => !parameters[secret]);
+    const missingSecrets = requiredSecrets.filter(secret => !secrets[secret]);
 
     if (missingSecrets.length > 0) {
       return {

@@ -36,13 +36,14 @@ export class Parser {
         const secrets = this.handleBarsContext.secrets;
 
         for (const [key, value] of Object.entries(secrets)) {
-            if (typeof value === 'string' && value.startsWith('@secret:')) {
+            if (value.startsWith('@secret:')) {
                 const refKey = value.slice(8); // remove '@secret:'
                 resolvedSecrets[key] = (await this.secretResolver(refKey)) || '';
             } else {
                 throw new Error(`Invalid secret reference: ${value}`);
             }
         }
+        console.log(resolvedSecrets, "Secret found.");
         return resolvedSecrets;
     }
 

@@ -1,5 +1,5 @@
 import { BaseContextManager } from "./base-context-manager";
-import { BaseWorkflowContext } from "../types/context";
+import { BaseWorkflowContext } from "@/types/context";
 import { INode } from "@/interfaces/engine.interface";
 
 export abstract class AbstractWorkflowContextManager<T extends BaseWorkflowContext> extends BaseContextManager<T> {

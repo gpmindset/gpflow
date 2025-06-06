@@ -18,4 +18,10 @@ export class SecretsManager {
     async listSecrets(workflowId: string): Promise<string[]> {
         return this.secretProvider.list(workflowId);
     }
+
+    async syncSecret(workflowId: string, key: string): Promise<void> {
+        if(!await this.secretProvider.get(workflowId, key)) {
+            
+        }
+    }
 }

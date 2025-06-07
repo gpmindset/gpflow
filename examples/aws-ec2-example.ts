@@ -43,7 +43,6 @@ const workflow: WorkflowDefinition = {
 const engine = new Workflow();
 let result = await engine.execute(workflow, {
   secrets: {
-    secretAccessKey: 'hbhjdbhbdhudbb'
   }
 });
 console.log(result);

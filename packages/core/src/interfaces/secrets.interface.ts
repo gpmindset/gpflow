@@ -3,4 +3,5 @@ export interface ISecretProvider {
     set(workflowId: string, key: string, value: string): Promise<void>;
     delete(workflowId: string, key: string): Promise<void>;
     list(workflowId: string): Promise<string[]>;
+    deleteAll(workflowId: string): Promise<void>;
 }

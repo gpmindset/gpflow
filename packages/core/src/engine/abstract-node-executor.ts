@@ -1,4 +1,4 @@
-import { IExecutionContext, INodeExecutor } from '../interfaces/engine.interface';
+import { IExecutionContext, INodeExecutor } from '@/interfaces/engine.interface';
 import { NodeDefinition, NodeParameters, NodeValidationResult } from '@/types/nodes';
 
 export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParameters> implements INodeExecutor {
@@ -15,6 +15,7 @@ export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParame
     }
 
     const secretsValidation = this.validateRequiredSecrets(secrets);
+    console.log(secretsValidation, "SecretValidation");
     if (!secretsValidation.isValid) {
       return secretsValidation;
     }
@@ -71,7 +72,9 @@ export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParame
     secrets: Record<string, string>,
   ): NodeValidationResult {
     const requiredSecrets = this.getRequiredSecrets();
+    console.log(secrets, "Sec");
     const missingSecrets = requiredSecrets.filter(secret => !secrets[secret]);
+
 
     if (missingSecrets.length > 0) {
       return {

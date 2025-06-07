@@ -19,9 +19,7 @@ export class SecretsManager {
         return this.secretProvider.list(workflowId);
     }
 
-    async syncSecret(workflowId: string, key: string): Promise<void> {
-        if(!await this.secretProvider.get(workflowId, key)) {
-            
-        }
+    async syncSecrets(workflowId: string): Promise<void> {
+        await this.secretProvider.deleteAll(workflowId);
     }
 }

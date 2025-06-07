@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc -b",
-        "dev:example": "ts-node aws-ec2-example.ts"
+        "dev:example": "node dist/aws-ec2-example.js"
     },
     "dependencies": {
         "@gpflow/workflow": "workspace:*"

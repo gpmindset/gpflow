@@ -1,5 +1,5 @@
 import { Parser } from "@/parser/parser";
-import { IExecutionContext, IExecutionEngine, IExecutionResult } from "../interfaces/engine.interface";
+import { IExecutionContext, IExecutionEngine, IExecutionResult } from "@/interfaces/engine.interface";
 import { NodeRegistry } from "./node-registry";
 import { NodeParameters } from "@/types/nodes";
 import { SecretsManager } from "@/secrets/secrets-manager";
@@ -60,8 +60,23 @@ export class ExecutionEngine implements IExecutionEngine {
                     error: new Error(`No executor found for node type: ${node.type}`)
                 };
             }
+
+            const parser = new Parser({ context, secretResolver: async (key) => await this.secretManager.getSecret(context.workflow.id, key) });
+            const resolvedSecrets = await parser.resolveSecrets();
+            const parsedParameters = parser.parse(node.parameters) as NodeParameters;
+
+            const parsedNode = {
+                ...node,
+                parameters: parsedParameters,
+            }
+
+            const parsedContext = {
+                ...context,
+                secrets: resolvedSecrets
+            }
+
             // Validate parameters and secrets
-            const validation = executor.validate(node.parameters, context.secrets);
+            const validation = executor.validate(parsedNode.parameters, parsedContext.secrets);
             console.log('Validation', validation);
             if (!validation.isValid) {
                 return {
@@ -73,12 +88,7 @@ export class ExecutionEngine implements IExecutionEngine {
             }
 
             try {
-
-                const parser = new Parser({ context, secretResolver: async (key) => await this.secretManager.getSecret(context.workflow.id, key) });
-                const parsedParameters = parser.parse(node.parameters) as NodeParameters;
-                const secrets = await parser.resolveSecrets();
-                
-                const { result, next } = await executor.execute({ ...node, parameters: parsedParameters }, { ...context, secrets });
+                const { result, next } = await executor.execute(parsedNode, parsedContext);
                 context.nodeResults[node.id] = result;
                 nodeResults[node.id] = result;
                 executedNodes.add(node.id);

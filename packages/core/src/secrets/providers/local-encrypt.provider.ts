@@ -75,4 +75,10 @@ export class LocalEncryptProvider implements ISecretProvider {
     await this.loadFromDisk();
     return Object.keys(this.secrets[workflowId] || {});
   }
+
+  async deleteAll(workflowId: string): Promise<void> {
+    await this.loadFromDisk();
+    delete this.secrets[workflowId];
+    await this.saveToDisk();
+  }
 }

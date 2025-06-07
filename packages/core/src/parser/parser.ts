@@ -4,9 +4,9 @@ import { HandlebarsContext, ResolvableValue, ResolvedValue } from "../types/pars
 import { ParserConstructorOptions } from "../types/parser";
 
 export class Parser {
-    private context: IExecutionContext;
-    private handleBarsContext: HandlebarsContext;
-    private secretResolver: (key: string) => Promise<string | undefined>;
+    private readonly context: IExecutionContext;
+    private readonly handleBarsContext: HandlebarsContext;
+    private readonly secretResolver: (key: string) => Promise<string | undefined>;
 
     constructor({ context, secretResolver }: ParserConstructorOptions) {
         this.context = context;
@@ -38,7 +38,10 @@ export class Parser {
         for (const [key, value] of Object.entries(secrets)) {
             if (value.startsWith('@secret:')) {
                 const refKey = value.slice(8); // remove '@secret:'
-                resolvedSecrets[key] = (await this.secretResolver(refKey)) || '';
+                const isResolved = await this.secretResolver(refKey)
+                if(isResolved) {
+                    resolvedSecrets[key] = isResolved
+                }
             } else {
                 throw new Error(`Invalid secret reference: ${value}`);
             }

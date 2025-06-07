@@ -26,7 +26,7 @@ export class Workflow {
         const contextManager = new WorkflowContextManager();
         const executor = new WorkflowExecutor(contextManager, this.engine);
 
-
+        await this.secretsManager.syncSecrets(workflow.id)
 
         for (const [key, val] of Object.entries(params?.secrets || {})) {
             await this.secretsManager.setSecret(workflow.id, key, val);

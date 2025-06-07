@@ -7,8 +7,8 @@
     "dev": "tsc-watch -p tsconfig.build.json --onCompilationComplete \"tsc-alias -p tsconfig.build.json\""
   },
   "main": "dist/index.js",
-	"module": "src/index.ts",
-	"types": "dist/index.d.ts",
+  "module": "src/index.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
@@ -20,9 +20,10 @@
     "tsc-alias": "^1.8.8"
   },
   "dependencies": {
-    "@gpflow/di": "workspace:*",
-    "@gpflow/decorators": "workspace:*",
     "@gpflow/core": "workspace:*",
-    "@gpflow/nodes": "workspace:*"
+    "@gpflow/decorators": "workspace:*",
+    "@gpflow/di": "workspace:*",
+    "@gpflow/nodes": "workspace:*",
+    "nanoid": "^5.1.5"
   }
 }

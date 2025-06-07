@@ -3,9 +3,9 @@ import { IExecutionContext } from '@gpflow/core';
 
 export interface EC2EditInstanceParameters extends NodeParameters {
     instanceType: string;
-    imageId: string;
-    subnetId: string;
-    securityGroupIds: string[];
+    imageId?: string;
+    subnetId?: string;
+    securityGroupIds?: string[];
     keyName?: string;
     tags?: Record<string, string>;
 }
@@ -28,5 +28,11 @@ export class EC2EditInstanceNode extends AbstractNodeExecutor<EC2EditInstancePar
             instanceType: node.parameters.instanceType,
             tags: node.parameters.tags || {}
         };
+    }
+}
+
+declare module "@/index" {
+    interface NodeParamsByType {
+        "aws.ec2.editInstance": EC2EditInstanceParameters
     }
 }

@@ -1,11 +1,11 @@
-import { AbstractNodeExecutor, NodeParameters, NodeValidationResult, NodeDefinition } from '@gpflow/core';
+import { AbstractNodeExecutor, NodeParameters, NodeDefinition } from '@gpflow/core';
 import { IExecutionContext } from '@gpflow/core';
 
 export interface EC2CreateInstanceParameters extends NodeParameters {
   instanceType: string;
-  imageId: string;
-  subnetId: string;
-  securityGroupIds: string[];
+  imageId?: string;
+  subnetId?: string;
+  securityGroupIds?: string[];
   keyName?: string;
   tags?: Record<string, string>;
 }
@@ -34,5 +34,11 @@ export class EC2CreateInstanceNode extends AbstractNodeExecutor<EC2CreateInstanc
       instanceType: node.parameters.instanceType,
       tags: node.parameters.tags || {}      
     };
+  }
+}
+
+declare module "@/index" {
+  interface NodeParamsByType {
+      "aws.ec2.createInstance": EC2CreateInstanceParameters
   }
 }

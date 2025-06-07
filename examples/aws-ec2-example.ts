@@ -1,48 +1,32 @@
-import { Workflow, WorkflowDefinition } from "@gpflow/workflow";
+import { Workflow } from "@gpflow/workflow";
+import {WorkflowBuilder, NodeBuilder} from "@gpflow/workflow";
 
 
-const workflow: WorkflowDefinition = {
-    id: 'restart-ec2',
-    name: 'Restart EC2 Instance on Failure',
-    description: 'Sample workflow',
-    secrets: {
-      accessKeyId: '@secret:accessKeyId',
-      secretAccessKey: '@secret:secretAccessKey'
-    },
-    nodes: [
-      {
-        id: 'check',
-        type: 'aws.ec2.createInstance',
-        name: 'Check Instance',
-        parameters: {
-          instanceId: 'i-1234567890abcdef0'
-        },
-        secrets: {
-          accessKeyId: '@secret:accessKeyId',
-          secretAccessKey: '@secret:secretAccessKey'
-        },
-        next: ["edit"]
-      },
-      {
-        id: 'edit',
-        type: 'aws.ec2.editInstance',
-        name: 'Edit Instance',
-        parameters: {
-          instanceId: '{{node.check.output.instanceId}}',
-          instanceType: 't2.micro'
-        },
-        secrets: {
-          accessKeyId: '@secret:accessKeyId',
-          secretAccessKey: '@secret:secretAccessKey'
-        },
-        next: []
-      },
-    ]
-};
+const builder = WorkflowBuilder.createWithTracking("restart-ec2");
+
+const createInstanceBuilder = NodeBuilder.create("aws.ec2.createInstance").parameters({
+  instanceType: 't2-micro'
+}).secrets({
+  accessKeyId: '@secret:accessKeyId',
+  secretAccessKey: '@secret:secretAccessKey'
+})
+
+const editInstanceBuilder = NodeBuilder.create("aws.ec2.editInstance").parameters({
+  instanceType: 't2-micro'
+}).secrets({
+  accessKeyId: '@secret:accessKeyId',
+  secretAccessKey: '@secret:secretAccessKey'
+})
+
+const workflow = builder
+                  .addNode(createInstanceBuilder)
+                  .addNode(editInstanceBuilder)
+                  .build();
 
 const engine = new Workflow();
 let result = await engine.execute(workflow, {
   secrets: {
+    secretAccessKey: "cfvgbhnm,ujmjj"
   }
 });
 console.log(result);

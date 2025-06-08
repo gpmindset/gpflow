@@ -1,7 +1,7 @@
 import { IExecutionContext } from "@/interfaces/engine.interface";
 import Handlebars from "handlebars";
-import { HandlebarsContext, ResolvableValue, ResolvedValue } from "../types/parser";
-import { ParserConstructorOptions } from "../types/parser";
+import { HandlebarsContext, ResolvableValue, ResolvedValue } from "@/types/parser";
+import { ParserConstructorOptions } from "@/types/parser";
 
 export class Parser {
     private readonly context: IExecutionContext;
@@ -38,9 +38,9 @@ export class Parser {
         for (const [key, value] of Object.entries(secrets)) {
             if (value.startsWith('@secret:')) {
                 const refKey = value.slice(8); // remove '@secret:'
-                const isResolved = await this.secretResolver(refKey)
-                if(isResolved) {
-                    resolvedSecrets[key] = isResolved
+                const resolvedSecret = await this.secretResolver(refKey)
+                if(resolvedSecret) {
+                    resolvedSecrets[key] = resolvedSecret
                 }
             } else {
                 throw new Error(`Invalid secret reference: ${value}`);

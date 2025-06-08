@@ -150,7 +150,7 @@ export class WorkflowExecutor extends AbstractWorkflowExecutor<WorkflowDefinitio
         for (const node of workflow.nodes) {
             if (node.secrets) {
                 for (const [key, value] of Object.entries(node.secrets)) {
-                    secrets[value.replace(/^@secret:/, "")] = value;
+                    secrets[key] = value;
                 }
             }
         }

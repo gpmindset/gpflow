@@ -10,6 +10,11 @@ export interface EC2CreateInstanceParameters extends NodeParameters {
   tags?: Record<string, string>;
 }
 
+export interface EC2CreateInstanceSecrets {
+  accessKeyId: string,
+  secretAccessKey: string,
+}
+
 export class EC2CreateInstanceNode extends AbstractNodeExecutor<EC2CreateInstanceParameters> {
   readonly type = 'aws.ec2.createInstance';
   
@@ -38,7 +43,12 @@ export class EC2CreateInstanceNode extends AbstractNodeExecutor<EC2CreateInstanc
 }
 
 declare module "@/index" {
+
   interface NodeParamsByType {
-      "aws.ec2.createInstance": EC2CreateInstanceParameters
+    "aws.ec2.createInstance": EC2CreateInstanceParameters
+  }
+
+  interface NodeSecretsByType {
+    "aws.ec2.createInstance": EC2CreateInstanceSecrets
   }
 }

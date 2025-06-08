@@ -1,5 +1,5 @@
 import {NodeDefinition, NodeType} from "@/types";
-import {NodeParamsByType} from "@gpflow/nodes";
+import {NodeParamsByType, NodeSecretsByType} from "@gpflow/nodes";
 import { nanoid } from "nanoid"
 
 export class NodeBuilder<T extends NodeType> {
@@ -38,7 +38,7 @@ export class NodeBuilder<T extends NodeType> {
         return this
     }
 
-    secrets(secrets: Record<string, string>): this {
+    secrets(secrets: NodeSecretsByType[T]): this {
         this.node.secrets = secrets
         return this
     }

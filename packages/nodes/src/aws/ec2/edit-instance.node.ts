@@ -10,6 +10,11 @@ export interface EC2EditInstanceParameters extends NodeParameters {
     tags?: Record<string, string>;
 }
 
+export interface EC2EditInstanceSecrets {
+    accessKeyId: string,
+    secretAccessKey: string,
+}
+
 export class EC2EditInstanceNode extends AbstractNodeExecutor<EC2EditInstanceParameters> {
     readonly type = 'aws.ec2.editInstance';
 
@@ -34,5 +39,9 @@ export class EC2EditInstanceNode extends AbstractNodeExecutor<EC2EditInstancePar
 declare module "@/index" {
     interface NodeParamsByType {
         "aws.ec2.editInstance": EC2EditInstanceParameters
+    }
+
+    interface NodeSecretsByType {
+        "aws.ec2.editInstance": EC2EditInstanceSecrets
     }
 }

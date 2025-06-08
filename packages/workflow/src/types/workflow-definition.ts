@@ -1,5 +1,5 @@
 // For conditional node's branching logic
-import { NodeParamsByType } from "@gpflow/nodes";
+import { NodeParamsByType, NodeSecretsByType } from "@gpflow/nodes";
 
 export type NodeType = keyof NodeParamsByType;
 
@@ -8,13 +8,6 @@ export interface ConditionalNext {
   false: string[];
 }
 
-// Common secret reference pattern
-type SecretReference = string; // Should follow "@secret:<key>"
-
-// Node-level secrets (optional)
-interface NodeSecrets {
-  [key: string]: SecretReference;
-}
 
 // Workflow node definition
 export interface NodeDefinition<T extends  NodeType = NodeType> {
@@ -22,14 +15,14 @@ export interface NodeDefinition<T extends  NodeType = NodeType> {
   type: T;
   name: string;
   parameters: NodeParamsByType[T];
-  secrets?: NodeSecrets;
+  secrets?: NodeSecretsByType[T];
   next?: string[] | ConditionalNext;
 }
 
 
 // Global workflow secrets
 interface WorkflowSecrets {
-  [key: string]: SecretReference;
+  [key: string]: string;
 }
 
 // Root workflow definition

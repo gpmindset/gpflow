@@ -15,6 +15,7 @@
 		"@types/express": "^5.0.2"
 	},
 	"dependencies": {
-		"@gpflow/di": "workspace:*"
+		"@gpflow/di": "workspace:*",
+        "@gpflow/core": "workspace:*"
 	}
 }

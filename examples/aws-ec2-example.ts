@@ -1,5 +1,4 @@
-import { Workflow } from "@gpflow/workflow";
-import {WorkflowBuilder, NodeBuilder} from "@gpflow/workflow";
+import { Workflow, WorkflowBuilder, NodeBuilder} from "@gpflow/workflow";
 
 
 const builder = WorkflowBuilder.createWithTracking("restart-ec2");

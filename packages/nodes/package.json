@@ -22,6 +22,7 @@
   "dependencies": {
     "@gpflow/di": "workspace:*",
     "@gpflow/core": "workspace:*",
+    "@gpflow/decorators": "workspace:*",
     "@aws-sdk/client-ec2": "^3.0.0"
   }
 }

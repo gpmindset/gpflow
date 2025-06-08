@@ -6,7 +6,7 @@ import { SecretsManager } from "@/secrets/secrets-manager";
 
 
 export class ExecutionEngine implements IExecutionEngine {
-    constructor(private nodeRegistry: NodeRegistry, private secretManager: SecretsManager) { }
+    constructor(private secretManager: SecretsManager) { }
 
     async execute(context: IExecutionContext): Promise<IExecutionResult> {
         const nodeResults: Record<string, any> = {};
@@ -51,7 +51,7 @@ export class ExecutionEngine implements IExecutionEngine {
                 };
             }
 
-            const executor = this.nodeRegistry.getNode(node.type);
+            const executor = NodeRegistry.getNode(node.type);
             if (!executor) {
                 return {
                     success: false,

@@ -1,5 +1,6 @@
 import { AbstractNodeExecutor, NodeParameters, NodeDefinition } from '@gpflow/core';
 import { IExecutionContext } from '@gpflow/core';
+import {RegisterNode} from "@gpflow/decorators";
 
 export interface EC2CreateInstanceParameters extends NodeParameters {
   instanceType: string;
@@ -15,6 +16,7 @@ export interface EC2CreateInstanceSecrets {
   secretAccessKey: string,
 }
 
+@RegisterNode()
 export class EC2CreateInstanceNode extends AbstractNodeExecutor<EC2CreateInstanceParameters> {
   readonly type = 'aws.ec2.createInstance';
   

@@ -3,17 +3,17 @@ import { Workflow, WorkflowBuilder, NodeBuilder} from "@gpflow/workflow";
 
 const builder = WorkflowBuilder.createWithTracking("restart-ec2");
 
-const createInstanceBuilder = NodeBuilder.create("aws.ec2.createInstance").parameters({
+const createNode = NodeBuilder.create("aws.ec2.createInstance").parameters({
   instanceType: 't2-micro'
 })
 
-const editInstanceBuilder = NodeBuilder.create("aws.ec2.editInstance").parameters({
+const editNode = NodeBuilder.create("aws.ec2.editInstance").parameters({
   instanceType: 't2-micro'
 })
 
 const workflow = builder
-                  .addNode(createInstanceBuilder)
-                  .addNode(editInstanceBuilder)
+                  .addNode(createNode)
+                  .addNode(editNode)
                   .globalSecrets({
                     accessKeyId: "@secret:my_key",
                     secretAccessKey: "@secret:my_secret",

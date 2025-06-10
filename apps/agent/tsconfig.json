@@ -1,0 +1,14 @@
+{
+	"extends": "@gpflow/typescript-config/base.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules", "dist"]
+}

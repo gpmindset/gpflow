@@ -1,7 +1,7 @@
 {
-  "name": "@gpflow/workflow",
+  "name": "@gpflow/runner",
   "version": "0.1.0",
-  "description": "Workflow Package is an SDK to create workflows programatically",
+  "description": "A runner to connect with remote",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "dev": "tsc-watch -p tsconfig.build.json --onCompilationComplete \"tsc-alias -p tsconfig.build.json\""
@@ -21,8 +21,6 @@
   },
   "dependencies": {
     "@gpflow/core": "workspace:*",
-    "@gpflow/decorators": "workspace:*",
-    "@gpflow/di": "workspace:*",
     "@gpflow/nodes": "workspace:*",
     "nanoid": "^5.1.5"
   }

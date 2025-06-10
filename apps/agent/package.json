@@ -1,7 +1,7 @@
 {
-  "name": "@gpflow/workflow",
+  "name": "@gpflow/agent",
   "version": "0.1.0",
-  "description": "Workflow Package is an SDK to create workflows programatically",
+  "description": "Agent for running workflows in Remote",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "dev": "tsc-watch -p tsconfig.build.json --onCompilationComplete \"tsc-alias -p tsconfig.build.json\""
@@ -17,13 +17,13 @@
   "license": "ISC",
   "devDependencies": {
     "@gpflow/typescript-config": "workspace:*",
+    "@types/express": "^5.0.2",
     "tsc-alias": "^1.8.8"
   },
   "dependencies": {
     "@gpflow/core": "workspace:*",
-    "@gpflow/decorators": "workspace:*",
-    "@gpflow/di": "workspace:*",
     "@gpflow/nodes": "workspace:*",
-    "nanoid": "^5.1.5"
+    "express": "^5.1.0",
+    "pino-http": "^10.4.0"
   }
 }

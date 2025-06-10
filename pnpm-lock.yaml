@@ -27,6 +27,31 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  apps/agent:
+    dependencies:
+      '@gpflow/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@gpflow/nodes':
+        specifier: workspace:*
+        version: link:../../packages/nodes
+      express:
+        specifier: ^5.1.0
+        version: 5.1.0
+      pino-http:
+        specifier: ^10.4.0
+        version: 10.4.0
+    devDependencies:
+      '@gpflow/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/@gpflow/typescript-config
+      '@types/express':
+        specifier: ^5.0.2
+        version: 5.0.2
+      tsc-alias:
+        specifier: ^1.8.8
+        version: 1.8.16
+
   apps/api:
     dependencies:
       '@gpflow/decorators':
@@ -375,6 +400,25 @@ importers:
       '@gpflow/di':
         specifier: workspace:*
         version: link:../@gpflow/di
+    devDependencies:
+      '@gpflow/typescript-config':
+        specifier: workspace:*
+        version: link:../@gpflow/typescript-config
+      tsc-alias:
+        specifier: ^1.8.8
+        version: 1.8.16
+
+  packages/runner:
+    dependencies:
+      '@gpflow/core':
+        specifier: workspace:*
+        version: link:../core
+      '@gpflow/nodes':
+        specifier: workspace:*
+        version: link:../nodes
+      nanoid:
+        specifier: ^5.1.5
+        version: 5.1.5
     devDependencies:
       '@gpflow/typescript-config':
         specifier: workspace:*

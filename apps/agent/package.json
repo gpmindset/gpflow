@@ -23,6 +23,7 @@
   "dependencies": {
     "@gpflow/core": "workspace:*",
     "@gpflow/nodes": "workspace:*",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "pino-http": "^10.4.0"
   }

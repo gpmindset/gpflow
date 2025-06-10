@@ -35,6 +35,9 @@ importers:
       '@gpflow/nodes':
         specifier: workspace:*
         version: link:../../packages/nodes
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       express:
         specifier: ^5.1.0
         version: 5.1.0

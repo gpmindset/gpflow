@@ -1,8 +1,9 @@
 import { IExecutionContext, INodeExecutor } from '@/interfaces/engine.interface';
-import { NodeDefinition, NodeParameters, NodeValidationResult } from '@/types/nodes';
+import {ExecutionTarget, NodeDefinition, NodeParameters, NodeValidationResult} from '@/types/nodes';
 
 export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParameters> implements INodeExecutor {
   abstract readonly type: string;
+  abstract  readonly target: ExecutionTarget;
 
   validateParameters(parameters: T): NodeValidationResult {
     return { isValid: true };
@@ -15,7 +16,6 @@ export abstract class AbstractNodeExecutor<T extends NodeParameters = NodeParame
     }
 
     const secretsValidation = this.validateRequiredSecrets(secrets);
-    console.log(secretsValidation, "SecretValidation");
     if (!secretsValidation.isValid) {
       return secretsValidation;
     }

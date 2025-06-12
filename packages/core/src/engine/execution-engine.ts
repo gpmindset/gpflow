@@ -1,120 +1,98 @@
 import { Parser } from "@/parser/parser";
-import { IExecutionContext, IExecutionEngine, IExecutionResult } from "@/interfaces/engine.interface";
+import {IExecutionContext, INode, IWorkflow} from "@/interfaces/engine.interface";
 import { NodeRegistry } from "./node-registry";
 import { NodeParameters } from "@/types/nodes";
 import { SecretsManager } from "@/secrets/secrets-manager";
+import {AbstractExecutionEngine} from "@/engine/abstract-execution-engine";
 
 
-export class ExecutionEngine implements IExecutionEngine {
-    constructor(private secretManager: SecretsManager) { }
+export class ExecutionEngine extends AbstractExecutionEngine{
+    constructor(private secretManager: SecretsManager) {
+        super()
+    }
 
-    async execute(context: IExecutionContext): Promise<IExecutionResult> {
-        const nodeResults: Record<string, any> = {};
-        const executedNodes = new Set<string>();
-        const visitedNodes = new Set<string>();
-        const queue: string[] = [];
+    private isAgentNode(node: INode): boolean{
+        const getNode = NodeRegistry.getNode(node.type);
+        if (!getNode) throw new Error(`No executor for ${node.type}`);
+        return getNode.target === "agent"
+    }
 
-        const { nodes, connections } = context.workflow;
+    protected getConsecutiveAgentNodes(start: string,  workflow: IWorkflow): string[] {
+        const visited = new Set<string>();
+        const queue = [start];
 
-        // Build connection graph
         const outgoingMap = new Map<string, string[]>();
-        for (const conn of connections) {
+        for (const conn of workflow.connections) {
             if (!outgoingMap.has(conn.sourceNode)) {
                 outgoingMap.set(conn.sourceNode, []);
             }
             outgoingMap.get(conn.sourceNode)!.push(conn.targetNode);
         }
 
-        // Find entry nodes (those with no incoming edges)
-        const inDegree = new Map<string, number>();
-        for (const node of nodes) inDegree.set(node.id, 0);
-        for (const conn of connections) {
-            inDegree.set(conn.targetNode, (inDegree.get(conn.targetNode) || 0) + 1);
-        }
-
-        for (const [id, degree] of inDegree.entries()) {
-            if (degree === 0) queue.push(id);
-        }
-
         while (queue.length > 0) {
-            const currentNodeId = queue.shift()!;
-            if (visitedNodes.has(currentNodeId)) continue;
-            visitedNodes.add(currentNodeId);
+            const nodeId = queue.shift()!;
+            if (visited.has(nodeId)) continue;
+            const node = workflow.nodes.find(n => n.id === nodeId);
+            if (!node || !this.isAgentNode(node)) continue;
 
-            const node = nodes.find(n => n.id === currentNodeId);
-            if (!node) {
-                return {
-                    success: false,
-                    nodeResults,
-                    executedNodes: Array.from(executedNodes),
-                    error: new Error(`Node not found: ${currentNodeId}`)
-                };
-            }
-
-            const executor = NodeRegistry.getNode(node.type);
-            if (!executor) {
-                return {
-                    success: false,
-                    nodeResults,
-                    executedNodes: Array.from(executedNodes),
-                    error: new Error(`No executor found for node type: ${node.type}`)
-                };
-            }
-
-            const parser = new Parser({ context, secretResolver: async (key) => await this.secretManager.getSecret(context.workflow.id, key) });
-            const resolvedSecrets = await parser.resolveSecrets();
-            const parsedParameters = parser.parse(node.parameters) as NodeParameters;
-
-            const parsedNode = {
-                ...node,
-                parameters: parsedParameters,
-            }
-
-            const parsedContext = {
-                ...context,
-                secrets: resolvedSecrets
-            }
-
-            // Validate parameters and secrets
-            const validation = executor.validate(parsedNode.parameters, parsedContext.secrets);
-            console.log('Validation', validation);
-            if (!validation.isValid) {
-                return {
-                    success: false,
-                    nodeResults,
-                    executedNodes: Array.from(executedNodes),
-                    error: new Error(`Invalid parameters for node ${node.id}: ${validation.errors?.join(', ')}`)
-                };
-            }
-
-            try {
-                const { result, next } = await executor.execute(parsedNode, parsedContext);
-                context.nodeResults[node.id] = result;
-                nodeResults[node.id] = result;
-                executedNodes.add(node.id);
-
-                const dynamicNext = next ?? outgoingMap.get(node.id) ?? [];
-                for (const nextNodeId of dynamicNext) {
-                    if (!visitedNodes.has(nextNodeId)) {
-                        queue.push(nextNodeId);
-                    }
-                }
-            } catch (error) {
-                const err = error instanceof Error ? error : new Error(String(error));
-                context.nodeResults[node.id] = err;
-                return {
-                    success: false,
-                    nodeResults,
-                    error: err,
-                    executedNodes: Array.from(executedNodes)
-                };
-            }
+            visited.add(nodeId);
+            const next = outgoingMap.get(nodeId) ?? [];
+            queue.push(...next);
         }
 
-        return {
-            success: true,
-            nodeResults,
-            executedNodes: Array.from(executedNodes)
-        };
+        return Array.from(visited);
+    }
+
+    protected async run(node: INode, context: IExecutionContext): Promise<{ result: any,  next?: string[]}> {
+        //TODO: Move parsing secrets and data here
+
+        if (this.isAgentNode(node)) {
+
+            const { workflow } = context;
+
+            const agentNodeIds = this.getConsecutiveAgentNodes(node.id, context.workflow);
+            const agentNodes = workflow.nodes.filter(n => agentNodeIds.includes(n.id));
+            const agentConnections = workflow.connections.filter(conn =>
+                agentNodeIds.includes(conn.sourceNode) && agentNodeIds.includes(conn.targetNode))
+
+            const agentSubworkflow: IWorkflow = {
+                id: `agent-${context.workflow.id}`,
+                name: context.workflow.name,
+                nodes: agentNodes,
+                connections: agentConnections,
+            };
+
+            const agentContext: IExecutionContext = {
+                ...context,
+                workflow: agentSubworkflow,
+                nodeResults: {}, // isolated from backend results
+                secrets: context.secrets, // already resolved by backend
+            };
+
+            // TODO: API call to agent
+        }
+
+        const executor = NodeRegistry.getNode(node.type);
+        if (!executor) throw new Error(`No executor for ${node.type}`);
+
+        const parser = new Parser({
+            context,
+            secretResolver: async (key) =>
+                await this.secretManager.getSecret(context.workflow.id, key),
+        });
+
+        const secrets = await parser.resolveSecrets();
+        const parameters = parser.parse(node.parameters) as NodeParameters;
+
+        const parsedNode = { ...node, parameters };
+        const validation = executor.validate(parameters, secrets);
+        if (!validation.isValid) {
+            throw new Error(`Invalid parameters: ${validation.errors?.join(', ')}`);
+        }
+
+        return await executor.execute(parsedNode, {
+            ...context,
+            secrets,
+        });
     }
 }

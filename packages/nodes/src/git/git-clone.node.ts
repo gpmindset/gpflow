@@ -1,6 +1,7 @@
 import { AbstractNodeExecutor, NodeParameters, NodeDefinition } from '@gpflow/core';
 import { IExecutionContext } from '@gpflow/core';
 import {RegisterNode} from "@gpflow/decorators";
+import {ExecutionTarget} from "@gpflow/core";
 
 export interface GitCloneParameters extends NodeParameters {
    
@@ -12,6 +13,7 @@ export interface GitCloneSecrets {
 
 @RegisterNode()
 export class GitCloneNode extends AbstractNodeExecutor<GitCloneParameters> {
+    readonly target = "agent";
     readonly type = 'git.clone';
 
     protected getRequiredSecrets(): string[] {

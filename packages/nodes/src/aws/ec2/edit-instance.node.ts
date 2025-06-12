@@ -1,6 +1,7 @@
 import { AbstractNodeExecutor, NodeParameters, NodeValidationResult, NodeDefinition } from '@gpflow/core';
 import { IExecutionContext } from '@gpflow/core';
 import {RegisterNode} from "@gpflow/decorators";
+import {ExecutionTarget} from "@gpflow/core";
 
 export interface EC2EditInstanceParameters extends NodeParameters {
     instanceType: string;
@@ -18,6 +19,7 @@ export interface EC2EditInstanceSecrets {
 
 @RegisterNode()
 export class EC2EditInstanceNode extends AbstractNodeExecutor<EC2EditInstanceParameters> {
+    readonly target = "default";
     readonly type = 'aws.ec2.editInstance';
 
     async run(

@@ -5,6 +5,8 @@ export interface NodeParameters {
   [key: string]: ResolvableValue;
 }
 
+export type ExecutionTarget = "default" | "agent"
+
 export interface NodeDefinition<T extends NodeParameters = NodeParameters> {
   id: string;
   type: string;

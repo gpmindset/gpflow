@@ -8,6 +8,7 @@ const createNode = NodeBuilder.create("aws.ec2.createInstance").parameters({
 })
 
 const editNode = NodeBuilder.create("aws.ec2.editInstance").parameters({
+    instanceId: "{{hello}}",
   instanceType: 't2-micro'
 })
 

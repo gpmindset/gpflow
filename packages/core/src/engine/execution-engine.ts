@@ -44,7 +44,22 @@ export class ExecutionEngine extends AbstractExecutionEngine{
     }
 
     protected async run(node: INode, context: IExecutionContext): Promise<{ result: any,  next?: string[]}> {
-        //TODO: Move parsing secrets and data here
+        const executor = NodeRegistry.getNode(node.type);
+        if (!executor) throw new Error(`No executor for ${node.type}`);
+
+        const parser = new Parser({
+            context,
+            secretResolver: async (key) =>
+                await this.secretManager.getSecret(context.workflow.id, key),
+        });
+
+        const secrets = await parser.resolveSecrets();
+
+        const parsedContext = {
+            ...context,
+            secrets
+        }
+
 
         if (this.isAgentNode(node)) {
 
@@ -65,34 +80,22 @@ export class ExecutionEngine extends AbstractExecutionEngine{
             const agentContext: IExecutionContext = {
                 ...context,
                 workflow: agentSubworkflow,
-                nodeResults: {}, // isolated from backend results
-                secrets: context.secrets, // already resolved by backend
+                nodeResults: {}, // isolated for agent results
+                secrets: parsedContext.secrets,
             };
 
             // TODO: API call to agent
         }
 
-        const executor = NodeRegistry.getNode(node.type);
-        if (!executor) throw new Error(`No executor for ${node.type}`);
-
-        const parser = new Parser({
-            context,
-            secretResolver: async (key) =>
-                await this.secretManager.getSecret(context.workflow.id, key),
-        });
-
-        const secrets = await parser.resolveSecrets();
         const parameters = parser.parse(node.parameters) as NodeParameters;
 
         const parsedNode = { ...node, parameters };
+
         const validation = executor.validate(parameters, secrets);
         if (!validation.isValid) {
             throw new Error(`Invalid parameters: ${validation.errors?.join(', ')}`);
         }
 
-        return await executor.execute(parsedNode, {
-            ...context,
-            secrets,
-        });
+        return await executor.execute(parsedNode, parsedContext);
     }
 }

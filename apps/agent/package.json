@@ -22,6 +22,7 @@
   "dependencies": {
     "@gpflow/core": "workspace:*",
     "@gpflow/nodes": "workspace:*",
+    "axios": "^1.9.0",
     "dotenv": "^16.5.0"
   }
 }

@@ -13,7 +13,7 @@ export interface GitCloneSecrets {
 
 @RegisterNode()
 export class GitCloneNode extends AbstractNodeExecutor<GitCloneParameters> {
-    readonly target = "agent";
+    readonly target = "agent-task-queue";
     readonly type = 'git.clone';
 
     protected getRequiredSecrets(): string[] {

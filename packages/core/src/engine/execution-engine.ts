@@ -4,9 +4,12 @@ import { NodeRegistry } from "./node-registry";
 import { NodeParameters } from "@/types/nodes";
 import { SecretsManager } from "@/secrets/secrets-manager";
 import {AbstractExecutionEngine} from "@/engine/abstract-execution-engine";
+import { AgentQueue } from "@/agent-task-queue/agent-task-queue";
+
 
 
 export class ExecutionEngine extends AbstractExecutionEngine{
+
     constructor(private secretManager: SecretsManager) {
         super()
     }
@@ -80,11 +83,11 @@ export class ExecutionEngine extends AbstractExecutionEngine{
             const agentContext: IExecutionContext = {
                 ...context,
                 workflow: agentSubworkflow,
-                nodeResults: {}, // isolated for agent results
+                nodeResults: {}, // isolated for agent-task-queue results
                 secrets: parsedContext.secrets,
             };
 
-            // TODO: API call to agent
+            AgentQueue.addToQueue(agentContext.workflow.id, agentContext)
         }
 
         const parameters = parser.parse(node.parameters) as NodeParameters;

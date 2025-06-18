@@ -35,6 +35,9 @@ importers:
       '@gpflow/nodes':
         specifier: workspace:*
         version: link:../../packages/nodes
+      axios:
+        specifier: ^1.9.0
+        version: 1.9.0
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -54,6 +57,9 @@ importers:
       '@gpflow/di':
         specifier: workspace:*
         version: link:../../packages/@gpflow/di
+      '@gpflow/workflow':
+        specifier: workspace:*
+        version: link:../../packages/workflow
       compression:
         specifier: ^1.8.0
         version: 1.8.0

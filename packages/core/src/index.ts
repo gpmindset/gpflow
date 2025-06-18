@@ -9,3 +9,5 @@ export type { NodeParameters, NodeDefinition, NodeValidationResult, NodeConstruc
 export type { BaseWorkflowContext } from "@/types/context"
 export { SecretsManager } from "@/secrets/secrets-manager"
 export { LocalEncryptProvider } from "@/secrets/providers/local-encrypt.provider"
+export { AgentQueue } from "@/agent-task-queue/agent-task-queue"
+export { InMemoryAgentTaskQueue } from "@/agent-task-queue/providers/inmemory-task-queue.provider"

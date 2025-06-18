@@ -24,12 +24,12 @@ export abstract class AbstractWorkflowContextManager<T extends BaseWorkflowConte
 	abstract getNodes(): any[];
 
 	/**
-	 * Set agent result of a node
+	 * Set agent-task-queue result of a node
 	 */
 	abstract setNodeResult(id: string, result: any): void;
 
 	/**
-	 * Get agent result of a node
+	 * Get agent-task-queue result of a node
 	 */
 	abstract getNodeResult(id: string): any;
 

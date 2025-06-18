@@ -13,6 +13,7 @@
   "dependencies": {
     "@gpflow/decorators": "workspace:*",
     "@gpflow/di": "workspace:*",
+    "@gpflow/workflow": "workspace:*",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
